@@ -1,12 +1,14 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 
 app = Flask(__name__)
 
 
+feedback_list = []
+
+
 @app.route("/", methods=["GET", "POST"])
 def home():
-    """Prompts the user to enter a name and displays it"""
     greeting = ""
     if request.method == "POST":
         username = request.form["name"]
@@ -16,12 +18,19 @@ def home():
 
 @app.route("/feedback", methods=["GET", "POST"])
 def feedback():
-    """Prompts the user to enter feedback and displays it"""
-    response = ""
     if request.method == "POST":
         feedback = request.form["feedback"]
-        response = f"Thank you for your feedback: '{feedback}'"
-    return render_template("feedback.html", response=response)
+        feedback_list.append(feedback)
+        return redirect(url_for('feedback'))
+
+    return render_template("feedback.html", feedback_list=feedback_list)
+
+
+@app.route("/delete_feedback/<int:index>", methods=["POST"])
+def delete_feedback(index: int):
+    if 0 <= index < len(feedback_list):
+        feedback_list.pop(index)
+    return redirect(url_for("feedback"))
 
 
 if __name__ == "__main__":
