@@ -1,4 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for 
+from flask import (
+    Flask, 
+    render_template, 
+    request, 
+    redirect, 
+    url_for,
+    jsonify
+)
 
 
 app = Flask(__name__)
@@ -49,6 +56,11 @@ def delete_feedback(index: int):
     if 0 <= index < len(feedback_list):
         feedback_list.pop(index)
     return redirect(url_for("feedback"))
+
+
+@app.route("/api/feedback")
+def get_feedback():
+    return jsonify({"feedback_list": feedback_list})
 
 
 if __name__ == "__main__":
