@@ -19,9 +19,14 @@ def home():
 @app.route("/feedback", methods=["GET", "POST"])
 def feedback():
     if request.method == "POST":
-        feedback = request.form["feedback"]
-        feedback_list.append(feedback)
-        return redirect(url_for('feedback'))
+        try:
+            feedback = request.form["feedback"]
+            feedback_list.append(feedback)  # Store feedback in the list
+            return redirect(url_for('feedback'))  # Redirect to the same page to avoid resubmission
+        except KeyError:
+            return "Error: Feedback field is missing.", 400
+        except Exception as e:
+            return f"An error occurred: {str(e)}", 500
 
     return render_template("feedback.html", feedback_list=feedback_list)
 
