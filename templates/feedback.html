@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback</title>
+</head>
+<body>
+    <h1>Feedback Form</h1>
+    <form method="POST">
+        <label for="feedback">Your Feedback:</label>
+        <textarea id="feedback" name="feedback" required></textarea>
+        <button type="submit">Submit Feedback</button>
+    </form>
+    <p>{{ response }}</p>
+    <a href="/">Back to Home</a>
+</body>
+</html>
