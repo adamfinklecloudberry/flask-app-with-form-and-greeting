@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for 
 
 
 app = Flask(__name__)
@@ -21,14 +21,27 @@ def feedback():
     if request.method == "POST":
         try:
             feedback = request.form["feedback"]
-            feedback_list.append(feedback)  # Store feedback in the list
-            return redirect(url_for('feedback'))  # Redirect to the same page to avoid resubmission
+            feedback_list.append(feedback)
+            return redirect(url_for('feedback'))
         except KeyError:
             return "Error: Feedback field is missing.", 400
         except Exception as e:
             return f"An error occurred: {str(e)}", 500
 
     return render_template("feedback.html", feedback_list=feedback_list)
+
+
+@app.route("/edit_feedback/<int:index>", methods=["GET", "POST"])
+def edit_feedback(index):
+    if request.method == "POST":
+        new_feedback = request.form["feedback"]
+        if 0 <= index < len(feedback_list):
+            feedback_list[index] = new_feedback
+        return redirect(url_for('feedback'))
+
+    # Render the edit form with the current feedback
+    current_feedback = feedback_list[index] if 0 <= index < len(feedback_list) else ""
+    return render_template("edit_feedback.html", current_feedback=current_feedback, index=index)
 
 
 @app.route("/delete_feedback/<int:index>", methods=["POST"])
