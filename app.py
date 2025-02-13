@@ -1,3 +1,7 @@
+"""
+A web app that receives and greets you with your name and receives and 
+stores feedback
+"""
 from flask import (
     Flask, 
     render_template, 
@@ -16,6 +20,7 @@ feedback_list = []
 
 @app.route("/", methods=["GET", "POST"])
 def home():
+    """Receives the user's name and greets them with it"""
     greeting = ""
     if request.method == "POST":
         username = request.form["name"]
@@ -25,6 +30,7 @@ def home():
 
 @app.route("/feedback", methods=["GET", "POST"])
 def feedback():
+    """Receives the user's feedback and displays it"""
     if request.method == "POST":
         try:
             feedback = request.form["feedback"]
@@ -40,6 +46,7 @@ def feedback():
 
 @app.route("/edit_feedback/<int:index>", methods=["GET", "POST"])
 def edit_feedback(index):
+    """Edits feedback already posted by the user"""
     if request.method == "POST":
         new_feedback = request.form["feedback"]
         if 0 <= index < len(feedback_list):
@@ -53,6 +60,7 @@ def edit_feedback(index):
 
 @app.route("/delete_feedback/<int:index>", methods=["POST"])
 def delete_feedback(index: int):
+    """Deletes feedback that the user has posted"""
     if 0 <= index < len(feedback_list):
         feedback_list.pop(index)
     return redirect(url_for("feedback"))
@@ -60,6 +68,7 @@ def delete_feedback(index: int):
 
 @app.route("/api/feedback")
 def get_feedback():
+    """Returns all feedback stored by the app as a JSON"""
     return jsonify({"feedback_list": feedback_list})
 
 
